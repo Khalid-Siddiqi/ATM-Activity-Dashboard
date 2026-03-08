@@ -10,9 +10,9 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # --- CONFIGURATION ---
-YOLO_MODEL_PATH = "atm.pt"
-HAND_CFG = "cross-hands-yolov4-tiny.cfg"
-HAND_WEIGHTS = "cross-hands-yolov4-tiny.weights"
+YOLO_MODEL_PATH = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\atm.pt"
+HAND_CFG = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\cross-hands-yolov4-tiny.cfg"
+HAND_WEIGHTS = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\cross-hands-yolov4-tiny.weights"
 VIDEO_SOURCE = r"C:\Users\gutech\Desktop\atm-activity\video\10.mp4"
 
 TEMP_OUTPUT = "temp_raw_recording.avi"
