@@ -1,0 +1,2 @@
+Transaction_ID,Total_Duration_Sec,Approach_Sec,Card_Insert_Sec,PIN_Entry_Sec,Card_Retrieve_Sec,Cash_Out_Sec,Success
+TXN-9655,51.0,5.0,1.7391304347826086,12.782608695652174,22.608695652173914,4.652173913043477,True

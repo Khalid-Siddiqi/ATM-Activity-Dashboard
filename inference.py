@@ -13,10 +13,10 @@ warnings.filterwarnings("ignore")
 YOLO_MODEL_PATH = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\atm.pt"
 HAND_CFG = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\cross-hands-yolov4-tiny.cfg"
 HAND_WEIGHTS = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\cross-hands-yolov4-tiny.weights"
-VIDEO_SOURCE = r"C:\Users\gutech\Desktop\atm-activity\video\10.mp4"
+VIDEO_SOURCE = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\video\1.mp4"
 
 TEMP_OUTPUT = "temp_raw_recording.avi"
-FINAL_OUTPUT = "atm_surveillance_whatsapp.mp4" 
+FINAL_OUTPUT = "atm_surveillance.mp4" 
 LOG_FILE = "atm_logs.csv" # NEW: The file your Streamlit dashboard will read
 
 SIDEBAR_WIDTH = 350  
