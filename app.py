@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 # --- 1. PAGE SETUP ---
 st.set_page_config(
-    page_title="Wavetec | Vision Analytics",
+    page_title="ATM Activity Analytics",
     page_icon="📈", 
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -86,16 +86,17 @@ st.markdown("<br>", unsafe_allow_html=True)
 col_video, col_charts = st.columns([1.2, 1])
 
 with col_video:
-    st.markdown("### 📷 Edge Device Feed (Anonymized Tracking)")
-    # Changed wording from "Surveillance" to "Edge Device Feed" - sounds much more enterprise-tech.
-    video_path = "processed_whatsapp_10.mp4" # Update this to one of your actual output videos
+    # Replaced "Edge Device Feed" with Activity Modeling terminology
+    st.markdown("### 🎥 Live Activity Modeling (Interaction Feed)")
+    video_path = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\atm_surveillance.mp4" # Update to your actual video
     
     if os.path.exists(video_path):
         st.video(video_path)
     else:
         st.info("Video feed standing by. Please ensure the pipeline has processed the latest batch.")
         
-    st.markdown("### 📋 Spatial Interaction Logs")
+    # Updated the table header to match the action recognition focus
+    st.markdown("### 📋 Fine-Grained Action Logs")
     st.dataframe(df.tail(6).iloc[::-1], use_container_width=True)
 
 with col_charts:
