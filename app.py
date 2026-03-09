@@ -7,25 +7,33 @@ import plotly.graph_objects as go
 
 # --- 1. PAGE SETUP ---
 st.set_page_config(
-    page_title="Vision Analytics",
-    page_icon="👁️",
+    page_title="Wavetec | Vision Analytics",
+    page_icon="📈", 
     layout="wide",
     initial_sidebar_state="collapsed"
 )
 
-# --- CUSTOM CSS FOR PREMIUM LOOK ---
+# --- CUSTOM CSS FOR EXECUTIVE BOARDROOM LOOK ---
 st.markdown("""
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    /* Style the metric cards */
+    
+    /* Sleek, corporate styling for the KPI cards */
     div[data-testid="metric-container"] {
-        background-color: #1E293B;
-        border: 1px solid #334155;
+        background-color: #121E36;
+        border: 1px solid #1E325C;
+        border-left: 4px solid #00AEEF; /* Wavetec Cyan Accent */
         padding: 5% 5% 5% 10%;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border-radius: 6px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Clean up the headers */
+    h1, h2, h3 {
+        font-weight: 300 !important;
+        letter-spacing: 0.5px;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -39,7 +47,7 @@ def load_data():
         if not df.empty:
             return df, True
 
-    # High-end Mock Data if CSV is missing
+    # High-end Mock Data
     np.random.seed(42)
     data = []
     for i in range(120):
@@ -56,15 +64,9 @@ def load_data():
 
 df, is_real_data = load_data()
 
-# --- 3. HEADER AREA ---
-col_logo, col_title = st.columns([1, 8])
-with col_logo:
-    # A generic vision icon to look professional
-    st.markdown("<h1 style='text-align: center; color: #00AEEF;'>👁️</h1>", unsafe_allow_html=True)
-with col_title:
-    st.title("Kiosk Vision Analytics Engine")
-    st.markdown("Automated Bottleneck Detection & Customer Journey Mapping")
-
+# --- 3. HEADER AREA (CLEAN & PROFESSIONAL) ---
+st.markdown("<h1 style='color: #F8FAFC;'>Wavetec <span style='color: #00AEEF; font-weight: 600;'>Vision Analytics</span></h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: #94A3B8; font-size: 1.1rem;'>Automated Customer Flow Mapping & Journey Optimization</p>", unsafe_allow_html=True)
 st.divider()
 
 # --- 4. TOP KPI METRICS ---
@@ -73,43 +75,43 @@ success_rate = (df["Success"].sum() / len(df)) * 100
 avg_pin_time = df["PIN_Entry_Sec"].mean()
 
 m1, m2, m3, m4 = st.columns(4)
-m1.metric("Processed Transactions", len(df), "Live Camera Feed")
-m2.metric("Avg Service Time", f"{avg_total_time:.1f}s", "-1.2s vs Target", delta_color="normal")
-m3.metric("Task Completion Rate", f"{success_rate:.1f}%", "-2.1% Abandonment", delta_color="normal")
-m4.metric("⚠️ Primary Bottleneck", f"{avg_pin_time:.1f}s", "Phase: PIN Entry", delta_color="inverse")
+m1.metric("Total Interactions Mapped", len(df), "Active Edge Node")
+m2.metric("Avg Customer Journey", f"{avg_total_time:.1f}s", "-1.2s vs Target", delta_color="normal")
+m3.metric("Journey Completion Rate", f"{success_rate:.1f}%", "-2.1% Abandonment", delta_color="normal")
+m4.metric("Critical Friction Point", f"{avg_pin_time:.1f}s", "Phase: PIN Entry", delta_color="inverse")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
-# --- 5. MAIN CONTENT SPLIT (VIDEO + ANALYTICS) ---
+# --- 5. MAIN CONTENT SPLIT ---
 col_video, col_charts = st.columns([1.2, 1])
 
 with col_video:
-    st.markdown("### 🔴 Live Surveillance Feed (Annotated)")
-    video_path = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\atm_surveillance.mp4"
+    st.markdown("### 📷 Edge Device Feed (Anonymized Tracking)")
+    # Changed wording from "Surveillance" to "Edge Device Feed" - sounds much more enterprise-tech.
+    video_path = "processed_whatsapp_10.mp4" # Update this to one of your actual output videos
     
-    # Check if the video from your YOLO script exists
     if os.path.exists(video_path):
         st.video(video_path)
     else:
-        st.warning(f"Video file '{video_path}' not found. Please run the YOLO script first.")
+        st.info("Video feed standing by. Please ensure the pipeline has processed the latest batch.")
         
-    st.markdown("### 📋 Recent Interaction Logs")
+    st.markdown("### 📋 Spatial Interaction Logs")
     st.dataframe(df.tail(6).iloc[::-1], use_container_width=True)
 
 with col_charts:
-    # --- 1. THE BOTTLENECK CHART (Moved to Top) ---
-    st.markdown("### ⏳ Phase Duration Breakdown")
+    # --- PHASE DURATION CHART ---
+    st.markdown("### ⏳ Journey Phase Breakdown")
     phase_cols = ["Card_Insert_Sec", "PIN_Entry_Sec", "Card_Retrieve_Sec", "Cash_Out_Sec"]
     avg_times = df[phase_cols].mean().reset_index()
     avg_times.columns = ["Phase", "Average Time (Seconds)"]
     avg_times["Phase"] = ["1. Insert Card", "2. Use Keypad", "3. Take Card", "4. Take Cash"]
     
-    # We use Wavetec Blue (#00AEEF) to highlight the bottleneck, and Slate Gray for the rest
+    # Using deep corporate blue for standard, Cyan for the bottleneck
     fig_bar = px.bar(avg_times, x="Average Time (Seconds)", y="Phase", 
                      orientation='h',
                      text_auto='.1f', 
                      color="Phase",
-                     color_discrete_sequence=["#334155", "#00AEEF", "#334155", "#334155"])
+                     color_discrete_sequence=["#1E325C", "#00AEEF", "#1E325C", "#1E325C"])
     
     fig_bar.update_layout(
         showlegend=False, 
@@ -122,22 +124,21 @@ with col_charts:
     )
     st.plotly_chart(fig_bar, use_container_width=True)
 
-    st.markdown("<br>", unsafe_allow_html=True) # Add a little breathing room
+    st.markdown("<br>", unsafe_allow_html=True) 
 
-    # --- 2. THE NEW OUTCOME CHART (Replaces Funnel) ---
-    st.markdown("### 🎯 Transaction Outcomes")
+    # --- TRANSACTION OUTCOMES DONUT ---
+    st.markdown("### 🎯 Journey Outcomes")
     
-    # Calculate Success vs Abandoned
     success_counts = df["Success"].value_counts().reset_index()
     success_counts.columns = ["Status", "Count"]
     success_counts["Status"] = success_counts["Status"].map({True: "Completed", False: "Abandoned"})
 
-    # Create a sleek Donut Chart
+    # Clean, executive donut chart
     fig_donut = px.pie(success_counts, values="Count", names="Status", hole=0.6,
                        color="Status",
-                       color_discrete_map={"Completed": "#00AEEF", "Abandoned": "#f43f5e"}) # Blue for success, Red for abandon
+                       color_discrete_map={"Completed": "#00AEEF", "Abandoned": "#FF4B4B"}) 
     
-    fig_donut.update_traces(textinfo='percent+label', textfont_size=14, marker=dict(line=dict(color='#0F172A', width=2)))
+    fig_donut.update_traces(textinfo='percent+label', textfont_size=14, marker=dict(line=dict(color='#0A1128', width=3)))
     fig_donut.update_layout(
         showlegend=False, 
         plot_bgcolor="rgba(0,0,0,0)", 
@@ -146,7 +147,5 @@ with col_charts:
         margin=dict(t=10, b=10, l=0, r=0)
     )
     
-    # Add a center label to the donut chart
-    fig_donut.add_annotation(text="Total<br>Interactions", x=0.5, y=0.5, font_size=14, showarrow=False, font_color="#F8FAFC")
-    
+    fig_donut.add_annotation(text="Total<br>Interactions", x=0.5, y=0.5, font_size=16, showarrow=False, font_color="#F8FAFC")
     st.plotly_chart(fig_donut, use_container_width=True)
