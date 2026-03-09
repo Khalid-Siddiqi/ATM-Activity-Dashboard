@@ -105,7 +105,7 @@ with col_video:
     raw_id = str(selected_txn).replace("TXN-", "")
     
     # Rebuild the expected video filename
-    video_path = f"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\processed_video\processed_whatsapp_{raw_id}.mp4"
+    video_path = fr"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\processed_video\processed_whatsapp_{raw_id}.mp4"
     
     # Play the dynamically selected video
     if os.path.exists(video_path):
@@ -145,42 +145,6 @@ with col_video:
         
     with tab_all:
         st.dataframe(style_dataframe(df.iloc[::-1]), use_container_width=True)        
-# 2. Upgraded Action Logs with Tabs & Conditional Formatting
-    st.markdown("### 📋 Fine-Grained Action Logs")
-    
-    # Define our threshold styling function
-    def highlight_bottleneck(val):
-        # Apply red background if value is greater than 20
-        if pd.isna(val):
-            return ''
-        color = 'background-color: rgba(255, 75, 75, 0.4)' if val > 20 else ''
-        return color
-    
-    tab_attention, tab_success, tab_all = st.tabs(["⚠️ Needs Attention (Abandoned)", "✅ Completed Journeys", "All Logs"])
-    
-    # Helper function to apply styles safely across Pandas versions
-    def style_dataframe(df_to_style):
-        try:
-            # For newer Pandas versions (2.1.0+)
-            return df_to_style.style.map(highlight_bottleneck, subset=['Card_Retrieve_Sec'])
-        except AttributeError:
-            # Fallback for older Pandas versions
-            return df_to_style.style.applymap(highlight_bottleneck, subset=['Card_Retrieve_Sec'])
-
-    with tab_attention:
-        failed_df = df[df["Success"] == False].iloc[::-1]
-        if failed_df.empty:
-            st.success("No abandoned transactions detected in this batch!")
-        else:
-            st.dataframe(style_dataframe(failed_df), use_container_width=True)
-            
-    with tab_success:
-        success_df = df[df["Success"] == True].iloc[::-1]
-        st.dataframe(style_dataframe(success_df), use_container_width=True)
-        
-    with tab_all:
-        st.dataframe(style_dataframe(df.iloc[::-1]), use_container_width=True)
-
 
 with col_charts:
     # --- PHASE DURATION CHART ---
