@@ -86,18 +86,101 @@ st.markdown("<br>", unsafe_allow_html=True)
 col_video, col_charts = st.columns([1.2, 1])
 
 with col_video:
-    # Replaced "Edge Device Feed" with Activity Modeling terminology
-    st.markdown("### 🎥 Live Activity Modeling (Interaction Feed)")
-    video_path = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\atm_surveillance.mp4" # Update to your actual video
+    st.markdown("### 🎥 Analyzed Interaction Session (Video Replay)")
     
+    # --- NEW: INTERACTIVE DROPDOWN ---
+    # Get all Transaction IDs from the dataframe to populate the dropdown
+    available_txns = df["Transaction_ID"].tolist()
+    
+    # Create the dropdown menu
+    selected_txn = st.selectbox(
+        "Select Transaction ID to investigate:", 
+        options=available_txns,
+        index=len(available_txns)-1 # Defaults to the most recent transaction
+    )
+    
+    # --- RECONSTRUCT THE VIDEO FILENAME ---
+    # Strip "TXN-" from the selected ID to get the original file number
+    # e.g., "TXN-10" becomes "10"
+    raw_id = str(selected_txn).replace("TXN-", "")
+    
+    # Rebuild the expected video filename
+    video_path = f"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\processed_video\processed_whatsapp_{raw_id}.mp4"
+    
+    # Play the dynamically selected video
     if os.path.exists(video_path):
         st.video(video_path)
     else:
-        st.info("Video feed standing by. Please ensure the pipeline has processed the latest batch.")
+        st.warning(f"Video file '{video_path}' not found in the folder. Please ensure it was processed.")
         
-    # Updated the table header to match the action recognition focus
+    st.markdown("<br>", unsafe_allow_html=True)
+        
+    # 2. Upgraded Action Logs with Tabs & Conditional Formatting
     st.markdown("### 📋 Fine-Grained Action Logs")
-    st.dataframe(df.tail(6).iloc[::-1], use_container_width=True)
+    
+    def highlight_bottleneck(val):
+        if pd.isna(val):
+            return ''
+        # Adjusted to 10 seconds for the demo!
+        return 'background-color: rgba(255, 75, 75, 0.4)' if val > 10 else ''
+    
+    tab_attention, tab_success, tab_all = st.tabs(["⚠️ Needs Attention (Abandoned)", "✅ Completed Journeys", "All Logs"])
+    
+    def style_dataframe(df_to_style):
+        try:
+            return df_to_style.style.map(highlight_bottleneck, subset=['PIN_Entry_Sec'])
+        except AttributeError:
+            return df_to_style.style.applymap(highlight_bottleneck, subset=['PIN_Entry_Sec'])
+
+    with tab_attention:
+        failed_df = df[df["Success"] == False].iloc[::-1]
+        if failed_df.empty:
+            st.success("No abandoned transactions detected in this batch!")
+        else:
+            st.dataframe(style_dataframe(failed_df), use_container_width=True)
+            
+    with tab_success:
+        success_df = df[df["Success"] == True].iloc[::-1]
+        st.dataframe(style_dataframe(success_df), use_container_width=True)
+        
+    with tab_all:
+        st.dataframe(style_dataframe(df.iloc[::-1]), use_container_width=True)        
+# 2. Upgraded Action Logs with Tabs & Conditional Formatting
+    st.markdown("### 📋 Fine-Grained Action Logs")
+    
+    # Define our threshold styling function
+    def highlight_bottleneck(val):
+        # Apply red background if value is greater than 20
+        if pd.isna(val):
+            return ''
+        color = 'background-color: rgba(255, 75, 75, 0.4)' if val > 20 else ''
+        return color
+    
+    tab_attention, tab_success, tab_all = st.tabs(["⚠️ Needs Attention (Abandoned)", "✅ Completed Journeys", "All Logs"])
+    
+    # Helper function to apply styles safely across Pandas versions
+    def style_dataframe(df_to_style):
+        try:
+            # For newer Pandas versions (2.1.0+)
+            return df_to_style.style.map(highlight_bottleneck, subset=['Card_Retrieve_Sec'])
+        except AttributeError:
+            # Fallback for older Pandas versions
+            return df_to_style.style.applymap(highlight_bottleneck, subset=['Card_Retrieve_Sec'])
+
+    with tab_attention:
+        failed_df = df[df["Success"] == False].iloc[::-1]
+        if failed_df.empty:
+            st.success("No abandoned transactions detected in this batch!")
+        else:
+            st.dataframe(style_dataframe(failed_df), use_container_width=True)
+            
+    with tab_success:
+        success_df = df[df["Success"] == True].iloc[::-1]
+        st.dataframe(style_dataframe(success_df), use_container_width=True)
+        
+    with tab_all:
+        st.dataframe(style_dataframe(df.iloc[::-1]), use_container_width=True)
+
 
 with col_charts:
     # --- PHASE DURATION CHART ---
