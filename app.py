@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 
 # --- 1. PAGE SETUP ---
 st.set_page_config(
-    page_title="ATM Activity Analytics",
+    page_title="ATM Activity Intelligence", 
     page_icon="📈", 
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -20,6 +20,12 @@ st.markdown("""
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
+    /* 🔥 THIS KILLS THE HUGE TOP GAP 🔥 */
+    .block-container {
+        padding-top: 2rem !important; 
+        padding-bottom: 1rem !important;
+    }
+    
     /* Sleek, corporate styling for the KPI cards */
     div[data-testid="metric-container"] {
         background-color: #121E36;
@@ -30,13 +36,18 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     }
     
-    /* Clean up the headers */
+    /* Clean up the headers and remove extra margins */
     h1, h2, h3 {
         font-weight: 300 !important;
         letter-spacing: 0.5px;
+        margin-top: 0px !important; 
+        padding-top: 0px !important;
     }
     </style>
 """, unsafe_allow_html=True)
+
+# ... (Leave your Data Loader section as is) ...
+
 
 # --- 2. DATA LOADER ---
 @st.cache_data
@@ -65,8 +76,9 @@ def load_data():
 df, is_real_data = load_data()
 
 # --- 3. HEADER AREA (CLEAN & PROFESSIONAL) ---
-st.markdown("<h1 style='color: #F8FAFC;'>Wavetec <span style='color: #00AEEF; font-weight: 600;'>Vision Analytics</span></h1>", unsafe_allow_html=True)
-st.markdown("<p style='color: #94A3B8; font-size: 1.1rem;'>Automated Customer Flow Mapping & Journey Optimization</p>", unsafe_allow_html=True)
+# White-labeled title keeping the premium Cyan accent
+st.markdown("<h1 style='color: #F8FAFC;'>ATM <span style='color: #00AEEF; font-weight: 600;'>Activity Intelligence</span></h1>", unsafe_allow_html=True)
+st.markdown("<p style='color: #94A3B8; font-size: 1.1rem;'>Automated Bottleneck Detection & Customer Journey Mapping</p>", unsafe_allow_html=True)
 st.divider()
 
 # --- 4. TOP KPI METRICS ---
