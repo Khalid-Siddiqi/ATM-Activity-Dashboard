@@ -11,12 +11,12 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # --- BATCH CONFIGURATION ---
-YOLO_MODEL_PATH = "atm.pt"
-HAND_CFG = "cross-hands-yolov4-tiny.cfg"
-HAND_WEIGHTS = "cross-hands-yolov4-tiny.weights"
+YOLO_MODEL_PATH = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\atm.pt"
+HAND_CFG = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\cross-hands-yolov4-tiny.cfg"
+HAND_WEIGHTS = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\model\cross-hands-yolov4-tiny.weights"
 
 # NEW: Point this to the FOLDER containing your 10 videos
-VIDEO_FOLDER = r"C:\Users\gutech\Desktop\atm-activity\video"
+VIDEO_FOLDER = r"C:\Users\Yousuf Traders\Desktop\Projects\ATM Activity Dashboard\video"
 LOG_FILE = "atm_logs.csv" 
 SIDEBAR_WIDTH = 350  
 YOLO_CLASS_MAP = { 0: "Card", 1: "Keypad", 2: "Money" }
@@ -110,7 +110,7 @@ def run_batch_system():
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         new_width = w + SIDEBAR_WIDTH
         # ... (continue to video_writer setup) ...
-        
+
         # Dynamic filenames so they don't overwrite
         temp_output = f"temp_{video_name}.avi"
         final_output = f"processed_whatsapp_{video_name}"
