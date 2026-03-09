@@ -84,13 +84,13 @@ st.divider()
 # --- 4. TOP KPI METRICS ---
 avg_total_time = df["Total_Duration_Sec"].mean()
 success_rate = (df["Success"].sum() / len(df)) * 100
-avg_pin_time = df["PIN_Entry_Sec"].mean()
+avg_pin_time = df["Card_Retrieve_Sec"].mean()
 
 m1, m2, m3, m4 = st.columns(4)
 m1.metric("Total Interactions Mapped", len(df), "Active Edge Node")
 m2.metric("Avg Customer Journey", f"{avg_total_time:.1f}s", "-1.2s vs Target", delta_color="normal")
 m3.metric("Journey Completion Rate", f"{success_rate:.1f}%", "-2.1% Abandonment", delta_color="normal")
-m4.metric("Critical Friction Point", f"{avg_pin_time:.1f}s", "Phase: PIN Entry", delta_color="inverse")
+m4.metric("Critical Friction Point", f"{avg_pin_time:.1f}s", "Phase: Card Retrieval", delta_color="inverse")
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -134,15 +134,15 @@ with col_video:
         if pd.isna(val):
             return ''
         # Adjusted to 10 seconds for the demo!
-        return 'background-color: rgba(255, 75, 75, 0.4)' if val > 10 else ''
+        return 'background-color: rgba(255, 75, 75, 0.4)' if val > 15 else ''
     
     tab_attention, tab_success, tab_all = st.tabs(["⚠️ Needs Attention (Abandoned)", "✅ Completed Journeys", "All Logs"])
     
     def style_dataframe(df_to_style):
         try:
-            return df_to_style.style.map(highlight_bottleneck, subset=['PIN_Entry_Sec'])
+            return df_to_style.style.map(highlight_bottleneck, subset=['Card_Retrieve_Sec','Card_Insert_Sec','PIN_Entry_Sec','Cash_Out_Sec'])
         except AttributeError:
-            return df_to_style.style.applymap(highlight_bottleneck, subset=['PIN_Entry_Sec'])
+            return df_to_style.style.applymap(highlight_bottleneck, subset=['Card_Retrieve_Sec'])
 
     with tab_attention:
         failed_df = df[df["Success"] == False].iloc[::-1]
@@ -164,7 +164,7 @@ with col_charts:
     phase_cols = ["Card_Insert_Sec", "PIN_Entry_Sec", "Card_Retrieve_Sec", "Cash_Out_Sec"]
     avg_times = df[phase_cols].mean().reset_index()
     avg_times.columns = ["Phase", "Average Time (Seconds)"]
-    avg_times["Phase"] = ["1. Insert Card", "2. Use Keypad", "3. Take Card", "4. Take Cash"]
+    avg_times["Phase"] = ["1. Card Insertion", "2. Pin Entry & Screen Interaction ", "3. Card Retrieval", "4. Cash Withdrawal"]
     
     # Using deep corporate blue for standard, Cyan for the bottleneck
     fig_bar = px.bar(avg_times, x="Average Time (Seconds)", y="Phase", 
